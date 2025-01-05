@@ -39,6 +39,10 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
                     return new RadioStatusReply(data);
                 case XCMPOpCode.VersionInfoReply:
                     return new VersionInfoReply(data);
+                case XCMPOpCode.RadioModelReply:
+                    return new RadioModelReply(data);
+                case XCMPOpCode.SerialReply:
+                    return new SerialReply(data);
                 case XCMPOpCode.AlarmStatusReply:
                     return new AlarmStatusReply(data);
                 case XCMPOpCode.ChannelSelectReply:

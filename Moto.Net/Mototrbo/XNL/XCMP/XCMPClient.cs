@@ -127,6 +127,23 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
             }
         }
 
+        public RadioModelReply GetRadioModel() {
+            XCMPPacket req = new RadioModelRequest();
+            this.SendPacket(req);
+            while (true)
+            {
+                XCMPPacket pkt = this.WaitForPacket(5000);
+                if (pkt.OpCode == XCMPOpCode.RadioModelReply)
+                {
+                    RadioModelReply model = (RadioModelReply)pkt;
+                    return model;
+                }
+                //Requeue this packet it wasn't for us...
+                this.receivedQueue.Add(pkt);
+                //TODO Timeout
+            }
+        }
+
         public VersionInfoReply GetVersionInfo() {
             return this.GetVersionInfo(VersionInfoType.HostSoftwareVersion);
         }

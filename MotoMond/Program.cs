@@ -374,11 +374,11 @@ namespace MotoMond
                         break;
                     case CallDataType.UnknownIP:
                         Console.WriteLine("Got Unknown IP Traffic! {0} => {1}" + rssiStr, call.From, call.To);
-                        if ((((DataCall)call).Datagram).IsValid)
+                        if ((((DataCall)call).Datagram).ValidChecksum)
                         {
-                            Console.WriteLine("    Source IP = {0} Dest IP = {1} Protocol {2}", ((DataCall)call).Datagram.Source, ((DataCall)call).Datagram.Destination, ((DataCall)call).Datagram.Protocol);
-                            Console.WriteLine("    Source Port = {0} Dest Port = {1}", ((DataCall)call).Datagram.Transport.SourcePort, ((DataCall)call).Datagram.Transport.DestinationPort);
-                            Console.WriteLine("    " + BitConverter.ToString(((DataCall)call).Datagram.Transport.Payload.ToArray()));
+                            Console.WriteLine("    Source IP = {0} Dest IP = {1} Protocol {2}", ((DataCall)call).Datagram.SourceAddress, ((DataCall)call).Datagram.DestinationAddress, ((DataCall)call).Datagram.Protocol);
+                            //Console.WriteLine("    Source Port = {0} Dest Port = {1}", ((DataCall)call).Datagram.Transport.SourcePort, ((DataCall)call).Datagram.Transport.DestinationPort);
+                            Console.WriteLine("    " + BitConverter.ToString(((DataCall)call).Datagram.PayloadData));
                         }
                         break;
                     default:

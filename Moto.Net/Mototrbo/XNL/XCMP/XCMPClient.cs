@@ -127,9 +127,13 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
             }
         }
 
-        public VersionInfoReply GetVersionInfo()
+        public VersionInfoReply GetVersionInfo() {
+            return this.GetVersionInfo(VersionInfoType.HostSoftwareVersion);
+        }
+
+        public VersionInfoReply GetVersionInfo(VersionInfoType type)
         {
-            XCMPPacket req = new VersionInfoRequest();
+            XCMPPacket req = new VersionInfoRequest(type);
             this.SendPacket(req);
             while(true)
             {

@@ -168,6 +168,19 @@ namespace Moto.Net
             }
         }
 
+        public String CodeplugVersion
+        {
+            get
+            {
+                if(this.xcmpClient != null)
+                {
+                    VersionInfoReply reply = this.xcmpClient.GetVersionInfo(VersionInfoType.CodeplugVersion);
+                    return reply.Version;
+                }
+                return "";
+            }
+        }
+
         public virtual UInt32 TimeSlots
         {
             get

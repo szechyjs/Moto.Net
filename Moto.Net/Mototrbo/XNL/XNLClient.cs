@@ -5,7 +5,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Windows.Forms;
 
 namespace Moto.Net.Mototrbo.XNL
 {

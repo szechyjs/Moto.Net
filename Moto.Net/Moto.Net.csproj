@@ -1,275 +1,41 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FA31F775-2F41-4CBF-94F6-797CCA9E3966}</ProjectGuid>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Moto.Net</RootNamespace>
-    <AssemblyName>Moto.Net</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>false</UseWindowsForms>
+    <ImportWindowsDesktopTargets>false</ImportWindowsDesktopTargets>
+    <AssemblyTitle>Moto.Net</AssemblyTitle>
+    <Product>Moto.Net</Product>
+    <Copyright>Copyright ©  2020</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=2.0.14.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.14\lib\net45\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Win32.Registry, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Win32.Registry.5.0.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio, Version=2.0.1.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.2.0.1\lib\netstandard2.0\NAudio.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio.Asio, Version=2.0.0.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.Asio.2.0.0\lib\netstandard2.0\NAudio.Asio.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.Core.2.0.0\lib\netstandard2.0\NAudio.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio.Midi, Version=2.0.1.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.Midi.2.0.1\lib\netstandard2.0\NAudio.Midi.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio.Wasapi, Version=2.0.0.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.Wasapi.2.0.0\lib\netstandard2.0\NAudio.Wasapi.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio.WinForms, Version=2.0.1.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.WinForms.2.0.1\lib\net472\NAudio.WinForms.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio.WinMM, Version=2.0.1.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.WinMM.2.0.1\lib\netstandard2.0\NAudio.WinMM.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="PcapDotNet.Base, Version=0.10.0.20588, Culture=neutral, PublicKeyToken=4b6f3e583145a652, processorArchitecture=MSIL">
-      <HintPath>..\packages\PcapDotNet.0.10.2\lib\net40\PcapDotNet.Base.dll</HintPath>
-    </Reference>
-    <Reference Include="PcapDotNet.Core, Version=0.10.0.20632, Culture=neutral, PublicKeyToken=4b6f3e583145a652, processorArchitecture=x86">
-      <HintPath>..\packages\PcapDotNet.0.10.2\lib\net40\PcapDotNet.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="PcapDotNet.Core.Extensions, Version=0.10.0.20638, Culture=neutral, PublicKeyToken=4b6f3e583145a652, processorArchitecture=MSIL">
-      <HintPath>..\packages\PcapDotNet.0.10.2\lib\net40\PcapDotNet.Core.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="PcapDotNet.Packets, Version=0.10.0.20603, Culture=neutral, PublicKeyToken=4b6f3e583145a652, processorArchitecture=MSIL">
-      <HintPath>..\packages\PcapDotNet.0.10.2\lib\net40\PcapDotNet.Packets.dll</HintPath>
-    </Reference>
-    <Reference Include="RabbitMQ.Client, Version=6.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
-      <HintPath>..\packages\RabbitMQ.Client.6.2.4\lib\net461\RabbitMQ.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Collections.Immutable, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.6.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Interactive.Async, Version=6.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Interactive.Async.6.0.1\lib\netstandard2.0\System.Interactive.Async.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Linq.Async, Version=6.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Linq.Async.6.0.1\lib\netstandard2.0\System.Linq.Async.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.AccessControl, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.AccessControl.6.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Text.Json, Version=8.0.0.4, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages\System.Text.Json.8.0.4\lib\net462\System.Text.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Threading.Channels, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Channels.6.0.0\lib\net461\System.Threading.Channels.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioCall.cs" />
-    <Compile Include="Audio\AMBEConverter.cs" />
-    <Compile Include="Audio\AudioConverter.cs" />
-    <Compile Include="Audio\AudioNotSupportedException.cs" />
-    <Compile Include="Audio\NullConverter.cs" />
-    <Compile Include="DataCall.cs" />
-    <Compile Include="Mototrbo\Bursts\DataBurst.cs" />
-    <Compile Include="Mototrbo\CallStatusNotificationPacket.cs" />
-    <Compile Include="Mototrbo\CallNotificationPacket.cs" />
-    <Compile Include="Mototrbo\LRRP\ImmediateLocationRequestPacket.cs" />
-    <Compile Include="Mototrbo\LRRP\ImmediateLocationResponsePacket.cs" />
-    <Compile Include="Mototrbo\LRRP\LRRPClient.cs" />
-    <Compile Include="Mototrbo\LRRP\LRRPPacket.cs" />
-    <Compile Include="Mototrbo\LRRP\LRRPPacketType.cs" />
-    <Compile Include="Mototrbo\LRRP\LRRPResponseCodes.cs" />
-    <Compile Include="Mototrbo\LRRP\TriggeredLocationPacket.cs" />
-    <Compile Include="Mototrbo\LRRP\TriggeredLocationStartRequestPacket.cs" />
-    <Compile Include="Mototrbo\LRRP\TriggeredLocationStartResponsePacket.cs" />
-    <Compile Include="Mototrbo\LRRP\TriggeredLocationStopRequestPacket.cs" />
-    <Compile Include="Mototrbo\LRRP\TriggeredLocatonStopResponsePacket.cs" />
-    <Compile Include="Mototrbo\LRRP\VersionRequestPacket.cs" />
-    <Compile Include="Mototrbo\LRRP\VersionResponsePacket.cs" />
-    <Compile Include="IPRadio.cs" />
-    <Compile Include="Mototrbo\PacketParsingException.cs" />
-    <Compile Include="Mototrbo\PeerKeepAliveRequest.cs" />
-    <Compile Include="Mototrbo\PeerRegistrationRequest.cs" />
-    <Compile Include="Mototrbo\RegistrationFlags.cs" />
-    <Compile Include="Mototrbo\TMS\TMSClient.cs" />
-    <Compile Include="Mototrbo\TCPClient.cs" />
-    <Compile Include="Mototrbo\XNL\DevSysMapBroadcastPacket.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\ChannelSelectRequest.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\ChannelSelectReply.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\CloneReadReply.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\CloneReadRequest.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\XCMPReplyPacket.cs" />
-    <Compile Include="Mototrbo\XNL\XNLDevType.cs" />
-    <Compile Include="Mototrbo\XNL\XNLNotSupportedException.cs" />
-    <Compile Include="PeerRadio.cs" />
-    <Compile Include="MasterRadio.cs" />
-    <Compile Include="Mototrbo\Bursts\Burst.cs" />
-    <Compile Include="Mototrbo\Bursts\CSBKBurst.cs" />
-    <Compile Include="Mototrbo\Bursts\CSBKOpCode.cs" />
-    <Compile Include="Mototrbo\Bursts\CSBK\Preamble.cs" />
-    <Compile Include="Mototrbo\Bursts\CSBK\RadioCheck.cs" />
-    <Compile Include="Mototrbo\Bursts\DataHeader.cs" />
-    <Compile Include="Mototrbo\Bursts\DataType.cs" />
-    <Compile Include="Mototrbo\Bursts\UnknownSmall.cs" />
-    <Compile Include="Mototrbo\Bursts\VoiceHeader.cs" />
-    <Compile Include="Mototrbo\PeerListReply.cs" />
-    <Compile Include="Mototrbo\PeerListRequest.cs" />
-    <Compile Include="Mototrbo\PeerKeepAliveReply.cs" />
-    <Compile Include="Mototrbo\TMS\MessageType.cs" />
-    <Compile Include="Mototrbo\TMS\TMSMessage.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\VersionInfoRequest.cs" />
-    <Compile Include="RadioCall.cs" />
-    <Compile Include="Mototrbo\UserPacket.cs" />
-    <Compile Include="Mototrbo\Util.cs" />
-    <Compile Include="Mototrbo\XNLXCMPPacket.cs" />
-    <Compile Include="Mototrbo\DeregistrationRequest.cs" />
-    <Compile Include="Mototrbo\MasterRegistrationReply.cs" />
-    <Compile Include="Mototrbo\MasterKeepAliveRequest.cs" />
-    <Compile Include="Mototrbo\MasterRegistrationRequest.cs" />
-    <Compile Include="Mototrbo\Packet.cs" />
-    <Compile Include="Mototrbo\PacketType.cs" />
-    <Compile Include="Mototrbo\PeerRegistrationReply.cs" />
-    <Compile Include="Mototrbo\XNL\DataPacket.cs" />
-    <Compile Include="Mototrbo\XNL\Address.cs" />
-    <Compile Include="Mototrbo\XNL\AckDataPacket.cs" />
-    <Compile Include="Mototrbo\XNL\DevAuthKeyReplyPacket.cs" />
-    <Compile Include="Mototrbo\XNL\DevAuthKeyRequestPacket.cs" />
-    <Compile Include="Mototrbo\XNL\DevConnectionReplyPacket.cs" />
-    <Compile Include="Mototrbo\XNL\DevConnectionRequestPacket.cs" />
-    <Compile Include="Mototrbo\XNL\Encrypter.cs" />
-    <Compile Include="Mototrbo\XNL\InitPacket.cs" />
-    <Compile Include="Mototrbo\XNL\OpCode.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\DeviceInitStatusBroadcast.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\AlarmStatusReply.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\AlarmStatusRequest.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\VersionInfoReply.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\RadioStatusRequest.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\RadioStatusReply.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\XCMPClient.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\XCMPStatus.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\XCMPOpCode.cs" />
-    <Compile Include="Mototrbo\XNL\XCMP\XCMPPacket.cs" />
-    <Compile Include="Mototrbo\XNL\XNLClient.cs" />
-    <Compile Include="Mototrbo\XNL\XNLPacket.cs" />
-    <Compile Include="RadioID.cs" />
-    <Compile Include="Mototrbo\UDPClient.cs" />
-    <Compile Include="Radio.cs" />
-    <Compile Include="RadioSystem.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RadioSystemType.cs" />
-    <Compile Include="LocalRadio.cs" />
-    <Compile Include="Util\CRC.cs" />
+    <PackageReference Include="log4net" Version="2.0.15" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="PacketDotNet" Version="1.4.7" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.4" />
+    <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
+    <PackageReference Include="System.Interactive.Async" Version="6.0.1" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Mototrbo\Bursts\VoiceBurst.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets'))" />
-  </Target>
 </Project>

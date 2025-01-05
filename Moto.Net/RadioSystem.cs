@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Moto.Net.Mototrbo;
 using System.Net;
 using System.Threading;
 using Moto.Net.Mototrbo.Bursts;
 using Moto.Net.Mototrbo.Bursts.CSBK;
-using PcapDotNet.Packets.Dns;
 using Moto.Net.Mototrbo.LRRP;
 using Moto.Net.Mototrbo.TMS;
 

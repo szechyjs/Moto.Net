@@ -26,7 +26,7 @@ namespace Moto.Net
     public class DataCall : RadioCall
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        protected PcapDotNet.Packets.IpV4.IpV4Datagram _datagram;
+        protected PacketDotNet.IPv4Packet _datagram;
 
         public DataCall()
         {
@@ -131,31 +131,31 @@ namespace Moto.Net
                         log.InfoFormat("OpCode = "+cb.CSBKOpCode+", Feature ID = "+cb.FeatureID+", Data = "+BitConverter.ToString(cb.Data));
                     }
                 }
-                else if(ret == CallDataType.UnknownIP)
+                else if (ret == CallDataType.UnknownIP)
                 {
-                    if(this.Datagram.Protocol == PcapDotNet.Packets.IpV4.IpV4Protocol.InternetControlMessageProtocol)
+                    if (this.Datagram.Protocol == PacketDotNet.ProtocolType.Icmp)
                     {
                         return CallDataType.ICMP;
                     }
-                    if(this.Datagram.Protocol == PcapDotNet.Packets.IpV4.IpV4Protocol.Tcp)
+                    if (this.Datagram.Protocol == PacketDotNet.ProtocolType.Tcp)
                     {
-                        PcapDotNet.Packets.Transport.TcpDatagram td = this.Datagram.Tcp;
-                        if (td.IsAcknowledgment)
+                        PacketDotNet.TcpPacket td = (PacketDotNet.TcpPacket)this.Datagram.PayloadPacket;
+                        if (td.Acknowledgment)
                         {
                             return CallDataType.TCPAck;
                         }
                     }
-                    else if(this.Datagram.Protocol == PcapDotNet.Packets.IpV4.IpV4Protocol.Udp)
+                    else if (this.Datagram.Protocol == PacketDotNet.ProtocolType.Udp)
                     {
-                        if(this.UDPDatagram == null)
+                        if (this.UDPDatagram == null)
                         {
                             return CallDataType.UnknownIP;
                         }
-                        if(this.UDPDatagram.DestinationPort == 4001)
+                        if (this.UDPDatagram.DestinationPort == 4001)
                         {
                             return CallDataType.LRRP;
                         }
-                        else if(this.UDPDatagram.DestinationPort == 4007)
+                        else if (this.UDPDatagram.DestinationPort == 4007)
                         {
                             return CallDataType.TMS;
                         }
@@ -166,24 +166,29 @@ namespace Moto.Net
         }
 
         [JsonIgnore]
-        public PcapDotNet.Packets.IpV4.IpV4Datagram Datagram
+        public PacketDotNet.IPv4Packet Datagram
         {
             get
             {
                 if(_datagram == null)
                 {
-                    _datagram = new PcapDotNet.Packets.Packet(this.Data, DateTime.Now, PcapDotNet.Packets.DataLinkKind.IpV4).IpV4;
+                    _datagram = new PacketDotNet.IPv4Packet(new PacketDotNet.Utils.ByteArraySegment(this.Data));
                 }
                 return _datagram;
             }
         }
 
         [JsonIgnore]
-        public PcapDotNet.Packets.Transport.UdpDatagram UDPDatagram
+        public PacketDotNet.UdpPacket UDPDatagram
         {
             get
             {
-                return this.Datagram.Udp;
+                var payload = this.Datagram.PayloadPacket;
+                if (payload is PacketDotNet.UdpPacket)
+                {
+                    return (PacketDotNet.UdpPacket)payload;
+                }
+                return null;
             }
         }
 
@@ -192,12 +197,12 @@ namespace Moto.Net
         {
             get
             {
-                PcapDotNet.Packets.Transport.UdpDatagram udp = this.UDPDatagram;
+                var udp = this.UDPDatagram;
                 if (udp == null)
                 {
                     return null;
                 }
-                return new TMSMessage(udp.Payload.ToMemoryStream().ToArray());
+                return new TMSMessage(udp.PayloadData);
             }
         }
 
@@ -205,12 +210,12 @@ namespace Moto.Net
         {
             get
             {
-                PcapDotNet.Packets.Transport.UdpDatagram udp = this.UDPDatagram;
+                var udp = this.UDPDatagram;
                 if (udp == null)
                 {
                     return null;
                 }
-                return LRRPPacket.Decode(udp.Payload.ToMemoryStream().ToArray());
+                return LRRPPacket.Decode(udp.PayloadData);
             }
         }
     }

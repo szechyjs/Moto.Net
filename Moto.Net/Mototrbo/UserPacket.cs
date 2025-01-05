@@ -1,11 +1,7 @@
 ﻿using Moto.Net.Mototrbo.Bursts;
-using NAudio.Midi;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Moto.Net.Mototrbo
 {

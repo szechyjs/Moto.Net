@@ -18,7 +18,7 @@ namespace Moto.Net.Mototrbo
         public Packet Packet
         {
             get
-            { 
+            {
                 return packet;
             }
         }
@@ -62,7 +62,9 @@ namespace Moto.Net.Mototrbo
             this.rawClient = new System.Net.Sockets.UdpClient();
             this.rawClient.EnableBroadcast = true;
             this.rawClient.ExclusiveAddressUse = true;
-            this.rawClient.AllowNatTraversal(true);
+            if (OperatingSystem.IsWindows()) {
+                this.rawClient.AllowNatTraversal(true);
+            }
             IPEndPoint localEP = new IPEndPoint(IPAddress.Any, port);
             this.rawClient.Client.Bind(localEP);
             this.output = new BlockingCollection<Packet>(100); //Save at most the last 100 packets...
@@ -81,7 +83,7 @@ namespace Moto.Net.Mototrbo
                 }
                 byte[] receiveBytes = this.rawClient.EndReceive(result, ref RemoteIpEndPoint);
                 Packet p = Packet.Decode(receiveBytes);
-                log.DebugFormat("Recieved {0} from {1}", p.ToString(), RemoteIpEndPoint.ToString());
+                log.DebugFormat("Received {0} from {1}", p.ToString(), RemoteIpEndPoint.ToString());
                 PacketEventArgs e = new PacketEventArgs(p, RemoteIpEndPoint);
                 switch (p.PacketType)
                 {

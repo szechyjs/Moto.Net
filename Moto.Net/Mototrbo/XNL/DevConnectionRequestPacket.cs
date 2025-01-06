@@ -24,7 +24,11 @@ namespace Moto.Net.Mototrbo.XNL
             this.connection = connectionAddress;
             this.deviceType = deviceType;
             this.authenticationLevel = authenticationLevel;
-            if (repeater)
+            if (authenticationLevel == 0)
+            {
+                this.key = Encrypter.EncryptSuper(key);
+            }
+            else if (repeater)
             {
                 this.key = Encrypter.Encrypt(key);
             }

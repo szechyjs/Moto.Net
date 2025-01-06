@@ -188,7 +188,8 @@ namespace Moto.Net.Mototrbo.XNL
             log.DebugFormat("Sending connection request {0}...", pkt.TempID);
             try
             {
-                XNLPacket newPkt = new DevConnectionRequestPacket(this.masterID, pkt.TempID, new Address(0), 0x0A, 0x01, pkt.AuthKey, (this.r is MasterRadio) || (this.r is PeerRadio));
+                // TODO: add a way to switch auth level, 0x00 - OEM?, 0x01 - 3rd party (TRBOnet)?
+                XNLPacket newPkt = new DevConnectionRequestPacket(this.masterID, pkt.TempID, new Address(0), 0x0A, 0x00, pkt.AuthKey, (this.r is MasterRadio) || (this.r is PeerRadio));
                 this.SendPacket(newPkt);
             }
             catch(XNLNotSupportedException)

@@ -103,6 +103,52 @@ namespace Moto.Net.Mototrbo.XNL
             return res;
         }
 
+        public static byte[] EncryptSuper(byte[] data)
+        {
+            UInt32 dword1 = Encrypter.ArrayToInt(data, 0);
+            UInt32 dword2 = Encrypter.ArrayToInt(data, 4);
+            string const1Str = ConfigurationManager.AppSettings.Get("XNLSuperConst1");
+            string const2Str = ConfigurationManager.AppSettings.Get("XNLSuperConst2");
+            string const3Str = ConfigurationManager.AppSettings.Get("XNLSuperConst3");
+            string const4Str = ConfigurationManager.AppSettings.Get("XNLSuperConst4");
+            string const5Str = ConfigurationManager.AppSettings.Get("XNLSuperConst5");
+            string const6Str = ConfigurationManager.AppSettings.Get("XNLSuperConst6");
+            if (const1Str == null || const2Str == null || const3Str == null || const4Str == null || const5Str == null || const6Str == null)
+            {
+                //See if we have TRBONet server
+                log.Info("Falling back to XNLAuthentication...");
+                try
+                {
+                    Assembly xnlAuth = Assembly.LoadFrom("XNLAuthentication.dll");
+                    Type authenticator = xnlAuth.GetType("XnlAuthentication.XnlAuthenticator");
+                    MethodInfo mi = authenticator.GetMethod("EncryptAuthKey", BindingFlags.Public | BindingFlags.Static);
+                    //The method alters the data in place...
+                    mi.Invoke(null, new object[] { data });
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    throw new XNLNotSupportedException("Unable to encrypt XNL data!", ex);
+                }
+            }
+            UInt32 num1 = UInt32.Parse(const1Str);
+            UInt32 num2 = UInt32.Parse(const2Str);
+            UInt32 num3 = UInt32.Parse(const3Str);
+            UInt32 num4 = UInt32.Parse(const4Str);
+            UInt32 num5 = UInt32.Parse(const5Str);
+            UInt32 num6 = UInt32.Parse(const6Str);
+            for (int index = 0; index < 32; ++index)
+            {
+                num1 += num2;
+                dword1 += (uint)(((int)dword2 << 4) + (int)num3 ^ (int)dword2 + (int)num1 ^ (int)(dword2 >> 5) + (int)num4);
+                dword2 += (uint)(((int)dword1 << 4) + (int)num5 ^ (int)dword1 + (int)num1 ^ (int)(dword1 >> 5) + (int)num6);
+            }
+            byte[] res = new byte[8];
+            Encrypter.IntToArray(dword1, res, 0);
+            Encrypter.IntToArray(dword2, res, 4);
+            return res;
+        }
+
         private static UInt32 ArrayToInt(byte[] data, int start)
         {
             UInt32 ret = 0;

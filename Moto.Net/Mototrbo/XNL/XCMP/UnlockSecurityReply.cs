@@ -6,7 +6,7 @@ public class UnlockSecurityReply : XCMPReplyPacket
 
     public UnlockSecurityReply(byte[] data) : base(data)
     {
-        this.success = data[3] == 0x00;
+        this.success = data[2] == 0x00;
     }
 
     public bool Success

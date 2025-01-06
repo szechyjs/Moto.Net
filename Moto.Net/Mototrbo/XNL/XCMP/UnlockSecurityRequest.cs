@@ -1,5 +1,3 @@
-using System;
-
 namespace Moto.Net.Mototrbo.XNL.XCMP;
 
 public class UnlockSecurityRequest : XCMPPacket

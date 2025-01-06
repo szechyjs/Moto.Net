@@ -181,6 +181,19 @@ namespace Moto.Net
             }
         }
 
+        public byte[] UUID
+        {
+            get
+            {
+                if(this.xcmpClient != null)
+                {
+                    UUIDReply reply = this.xcmpClient.GetUUID();
+                    return reply.UUID;
+                }
+                return [];
+            }
+        }
+
         public virtual UInt32 TimeSlots
         {
             get
@@ -249,6 +262,16 @@ namespace Moto.Net
                 return reply.Channel;
             }
             return 0;
+        }
+
+        public bool UnlockRadio() {
+            var keyReply = this.xcmpClient.ReadRadioKey();
+            if (keyReply.ErrorCode != XCMPErrorCode.Success)
+            {
+                return false;
+            }
+            var unlockReply = this.xcmpClient.UnlockSecurity(keyReply.Key);
+            return unlockReply.Success;
         }
 
         public byte[] SendXCMP(XCMPPacket pkt)

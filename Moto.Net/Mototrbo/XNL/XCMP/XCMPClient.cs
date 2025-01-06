@@ -166,6 +166,59 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
             }
         }
 
+        public UUIDReply GetUUID()
+        {
+            XCMPPacket req = new UUIDRequest();
+            this.SendPacket(req);
+            while (true)
+            {
+                XCMPPacket pkt = this.WaitForPacket(5000);
+                if (pkt.OpCode == XCMPOpCode.UUIDReply)
+                {
+                    UUIDReply uuid = (UUIDReply)pkt;
+                    return uuid;
+                }
+                //Requeue this packet it wasn't for us...
+                this.receivedQueue.Add(pkt);
+                //TODO Timeout
+            }
+        }
+
+        public RadioKeyReply ReadRadioKey() {
+            XCMPPacket req = new RadioKeyRequest();
+            this.SendPacket(req);
+            while (true)
+            {
+                XCMPPacket pkt = this.WaitForPacket(5000);
+                if (pkt.OpCode == XCMPOpCode.RadioKeyReply)
+                {
+                    RadioKeyReply rkr = (RadioKeyReply)pkt;
+                    return rkr;
+                }
+                //Requeue this packet it wasn't for us...
+                this.receivedQueue.Add(pkt);
+                //TODO Timeout
+            }
+        }
+
+        public UnlockSecurityReply UnlockSecurity(byte[] radioKey)
+        {
+            UnlockSecurityRequest req = new UnlockSecurityRequest(radioKey);
+            this.SendPacket(req);
+            while (true)
+            {
+                XCMPPacket pkt = this.WaitForPacket(5000);
+                if (pkt.OpCode == XCMPOpCode.UnlockSecurityReply)
+                {
+                    UnlockSecurityReply usr = (UnlockSecurityReply)pkt;
+                    return usr;
+                }
+                //Requeue this packet it wasn't for us...
+                this.receivedQueue.Add(pkt);
+                //TODO Timeout
+            }
+        }
+
         public AlarmStatusReply GetAlarmStatus()
         {
             AlarmStatusRequest req = new AlarmStatusRequest();
@@ -258,8 +311,12 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
                     case XCMPOpCode.AlarmStatusReply:
                     case XCMPOpCode.ChannelSelectReply:
                     case XCMPOpCode.CloneReadReply:
+                    case XCMPOpCode.RadioModelReply:
+                    case XCMPOpCode.UUIDReply:
+                    case XCMPOpCode.RadioKeyReply:
+                    case XCMPOpCode.UnlockSecurityReply:
                         //These packets I know about and have logic to handle...
-                        if(((XCMPReplyPacket)xcmp).ErrorCode == XCMPErrorCode.ReInitXNL)
+                        if(((XCMPReplyPacket)xcmp).ErrorCode == XCMPErrorCode.IncorrectMode)
                         {
                             Console.WriteLine("Starting XNL ReInit!");
                             //Need to reinit my XNL connection...

@@ -43,6 +43,12 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
                     return new RadioModelReply(data);
                 case XCMPOpCode.SerialReply:
                     return new SerialReply(data);
+                case XCMPOpCode.UUIDReply:
+                    return new UUIDReply(data);
+                case XCMPOpCode.RadioKeyReply:
+                    return new RadioKeyReply(data);
+                case XCMPOpCode.UnlockSecurityReply:
+                    return new UnlockSecurityReply(data);
                 case XCMPOpCode.AlarmStatusReply:
                     return new AlarmStatusReply(data);
                 case XCMPOpCode.ChannelSelectReply:

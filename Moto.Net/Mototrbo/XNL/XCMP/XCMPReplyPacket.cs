@@ -9,8 +9,31 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
     public enum XCMPErrorCode
     {
         Success = 0,
-        ReInitXNL = 0x02,
-        BadParams = 0x04
+        Failure = 1,
+        IncorrectMode = 2,
+        OpcodeNotSupported = 3,
+        InvalidParameter = 4,
+        ReplyTooBig = 5,
+        SecurityLocked = 6,
+        BundledOpcodeNotSupported = 7,
+        Busy = 16,
+        BitLocked = 17,
+        RadioIsLocked = 18,
+        VoltageNotStable = 19,
+        ProgramFailure = 20,
+        TransferComplete = 22,
+        RequestNotRxd = 23,
+        SoftpotOperationNotSupported = 64,
+        SoftpotTypeNotSupported = 65,
+        SoftpotValueOutOfRange = 66,
+        FlashWriteFailure = 128,
+        ISHItemNotFound = 129,
+        ISHOffsetOutOfRange = 130,
+        ISHInsufficientPartitionSpace = 131,
+        ISHPartitionDoesNotExist = 132,
+        ISHPartitionReadOnly = 133,
+        ISHReorgNeeded = 134,
+        Undefined = 135,
     }
 
     public class XCMPReplyPacket : XCMPPacket

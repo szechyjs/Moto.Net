@@ -9,33 +9,33 @@ namespace Moto.Net.Mototrbo.XNL
     public class DevConnectionRequestPacket : XNLPacket
     {
         protected Address connection;
-        protected byte connectionType;
-        protected byte connectionIndex;
+        protected byte deviceType;
+        protected byte authenticationLevel;
         protected byte[] key;
 
         public DevConnectionRequestPacket() : base(OpCode.DeviceConnectionRequest)
         {
         }
 
-        public DevConnectionRequestPacket(Address dest, Address src, Address connectionAddress, byte connectionType, byte connectionIndex, byte[] key, bool repeater) : base(OpCode.DeviceConnectionRequest)
+        public DevConnectionRequestPacket(Address dest, Address src, Address connectionAddress, byte deviceType, byte authenticationLevel, byte[] key, bool repeater) : base(OpCode.DeviceConnectionRequest)
         {
             this.dest = dest;
             this.src = src;
             this.connection = connectionAddress;
-            this.connectionType = connectionType;
-            this.connectionIndex = connectionIndex;
+            this.deviceType = deviceType;
+            this.authenticationLevel = authenticationLevel;
             if (repeater)
             {
                 this.key = Encrypter.Encrypt(key);
-            } 
+            }
             else
             {
                 this.key = Encrypter.EncryptControlStation(key);
             }
             this.data = new byte[4+this.key.Length];
             this.connection.AddToArray(this.data, 0);
-            this.data[2] = this.connectionType;
-            this.data[3] = this.connectionIndex;
+            this.data[2] = this.deviceType;
+            this.data[3] = this.authenticationLevel;
             Array.Copy(this.key, 0, this.data, 4, this.key.Length);
         }
     }

@@ -188,7 +188,7 @@ namespace Moto.Net.Mototrbo.XNL
             log.DebugFormat("Sending connection request {0}...", pkt.TempID);
             try
             {
-                XNLPacket newPkt = new DevConnectionRequestPacket(this.masterID, pkt.TempID, new Address(0), 0x0A, 0x01, pkt.AuthKey, ((this.r is MasterRadio) || (this.r is PeerRadio)));
+                XNLPacket newPkt = new DevConnectionRequestPacket(this.masterID, pkt.TempID, new Address(0), 0x0A, 0x01, pkt.AuthKey, (this.r is MasterRadio) || (this.r is PeerRadio));
                 this.SendPacket(newPkt);
             }
             catch(XNLNotSupportedException)
@@ -196,7 +196,7 @@ namespace Moto.Net.Mototrbo.XNL
                 log.WarnFormat("Unable to finish XNL connection to device due to lack of encrypter. Operating at reduced feature set...");
                 this.isDead = true;
             }
-            
+
         }
 
         private void ProcessSysMap(DevSysMapBroadcastPacket pkt)

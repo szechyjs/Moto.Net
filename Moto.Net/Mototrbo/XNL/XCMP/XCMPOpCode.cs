@@ -43,7 +43,9 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
         ChannelSelectReply = 0x840D,
         RRCtrlBroadcast = 0xB41C,
         AlarmStatusRequest = 0x042E,
-        AlarmStatusReply = 0x842E
+        AlarmStatusReply = 0x842E,
+        XferDataRequest = 0x0446,
+        XferDataReply = 0x8446,
     }
     //Unknown packet: {OpCode: 0000B402, Data: 01-09-00-00-0C-01-05-00-01-00-04-00}
 

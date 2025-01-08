@@ -45,7 +45,6 @@ namespace Moto.Net.Mototrbo.XNL
             UInt16 len = (UInt16)((data[8] << 8) | data[9]);
             this.data = new byte[len];
             Array.Copy(data, 10, this.data, 0, len);
-            Console.WriteLine(this);
         }
 
         public static XNLPacket Decode(Byte[] data)

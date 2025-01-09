@@ -261,3 +261,5 @@ __pycache__/
 *.pyc
 
 MotoMond/App.config
+TrboTools/app.config
+TrboTools/features.json

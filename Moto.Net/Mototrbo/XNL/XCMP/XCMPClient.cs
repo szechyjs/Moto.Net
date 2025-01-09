@@ -169,17 +169,17 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
         public UUIDReply GetUUID()
         {
             XCMPPacket req = new UUIDRequest();
-            this.SendPacket(req);
+            SendPacket(req);
             while (true)
             {
-                XCMPPacket pkt = this.WaitForPacket(5000);
+                XCMPPacket pkt = WaitForPacket(5000);
                 if (pkt.OpCode == XCMPOpCode.UUIDReply)
                 {
                     UUIDReply uuid = (UUIDReply)pkt;
                     return uuid;
                 }
                 //Requeue this packet it wasn't for us...
-                this.receivedQueue.Add(pkt);
+                receivedQueue.Add(pkt);
                 //TODO Timeout
             }
         }
@@ -306,6 +306,7 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
                     case XCMPOpCode.RRCtrlBroadcast:
                         //Drop this type I don't know what it is right now, but don't see any reason to put it in the queue either
                         break;
+                    case XCMPOpCode.ResetReply:
                     case XCMPOpCode.VersionInfoReply:
                     case XCMPOpCode.RadioStatusReply:
                     case XCMPOpCode.AlarmStatusReply:
@@ -316,6 +317,8 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
                     case XCMPOpCode.RadioKeyReply:
                     case XCMPOpCode.UnlockSecurityReply:
                     case XCMPOpCode.XferDataReply:
+                    case XCMPOpCode.SuperBundleReply:
+                    case XCMPOpCode.ReadIshItemReply:
                         //These packets I know about and have logic to handle...
                         if(((XCMPReplyPacket)xcmp).ErrorCode == XCMPErrorCode.IncorrectMode)
                         {

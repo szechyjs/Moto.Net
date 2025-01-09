@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Moto.Net.Mototrbo;
+using Moto.Net.Mototrbo.Devices;
 using Moto.Net.Mototrbo.XNL;
 using Moto.Net.Mototrbo.XNL.XCMP;
 
@@ -53,6 +54,7 @@ namespace Moto.Net
         protected XCMPClient xcmpClient;
         protected Dictionary<RadioID, RadioCall> activeCalls;
         protected string name;
+        protected Device device;
 
         public event PacketHandler GotXNLXCMPPacket;
         public event PacketHandler GotUserPacket;
@@ -61,6 +63,15 @@ namespace Moto.Net
         protected Radio()
         {
             this.activeCalls = new Dictionary<RadioID, RadioCall>();
+        }
+
+        public Device Device
+        {
+            get
+            {
+                this.device ??= Device.FromRadio(this);
+                return this.device;
+            }
         }
 
         public RadioID ID
@@ -185,9 +196,9 @@ namespace Moto.Net
         {
             get
             {
-                if(this.xcmpClient != null)
+                if(xcmpClient != null)
                 {
-                    UUIDReply reply = this.xcmpClient.GetUUID();
+                    UUIDReply reply = xcmpClient.GetUUID();
                     return reply.UUID;
                 }
                 return [];
@@ -272,6 +283,27 @@ namespace Moto.Net
             }
             var unlockReply = this.xcmpClient.UnlockSecurity(keyReply.Key);
             return unlockReply.Success;
+        }
+
+        public bool Reset()
+        {
+            if (xcmpClient == null)
+            {
+                return false;
+            }
+            var req = new ResetRequest();
+            var reply = SendXCMP<ResetReply>(req);
+            return reply != null && reply.ErrorCode == XCMPErrorCode.Success;
+        }
+
+        public T SendXCMP<T>(XCMPPacket pkt) where T : XCMPReplyPacket
+        {
+            if (xcmpClient != null)
+            {
+                XCMPPacket res = xcmpClient.SendPacketAndWaitForSameType(pkt);
+                return res as T;
+            }
+            return null;
         }
 
         public byte[] SendXCMP(XCMPPacket pkt)

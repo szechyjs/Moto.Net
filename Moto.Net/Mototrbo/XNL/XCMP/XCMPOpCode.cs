@@ -9,6 +9,8 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
     public enum XCMPOpCode
     {
         DeviceinitStatusBroadcast = 0xB400,
+        ResetRequest = 0x000D,
+        ResetReply = 0x800D,
         RadioStatusRequest = 0x000E,
         RadioStatusReply = 0x800E,
         VersionInfoRequest = 0x000F,
@@ -29,8 +31,8 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
         SuperBundleReply = 0x802E,
         CodeplugAttrRequest = 0x0037,
         CodeplugAttrReply = 0x8037,
-        ReadISHItemRequest = 0x0100,
-        ReadISHItemReply = 0x8100,
+        ReadIshItemRequest = 0x0100,
+        ReadIshItemReply = 0x8100,
         ISHUnlockReportRequest = 0x0108,
         ISHUnlockReportReply = 0x8108,
         CloneReadRequest = 0x010A,

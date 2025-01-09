@@ -35,6 +35,8 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
             {
                 case XCMPOpCode.DeviceinitStatusBroadcast:
                     return new DeviceInitStatusBroadcast(data);
+                case XCMPOpCode.ResetReply:
+                    return new ResetReply(data);
                 case XCMPOpCode.RadioStatusReply:
                     return new RadioStatusReply(data);
                 case XCMPOpCode.VersionInfoReply:
@@ -45,6 +47,10 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
                     return new SerialReply(data);
                 case XCMPOpCode.UUIDReply:
                     return new UUIDReply(data);
+                case XCMPOpCode.SuperBundleReply:
+                    return new SuperBundleReply(data);
+                case XCMPOpCode.ReadIshItemReply:
+                    return new ReadIshItemReply(data);
                 case XCMPOpCode.RadioKeyReply:
                     return new RadioKeyReply(data);
                 case XCMPOpCode.UnlockSecurityReply:
@@ -55,6 +61,8 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
                     return new ChannelSelectReply(data);
                 case XCMPOpCode.CloneReadReply:
                     return new CloneReadReply(data);
+                case XCMPOpCode.XferDataReply:
+                    return new XferDataReply(data);
                 default:
                     return new XCMPPacket(data);
             }
@@ -66,6 +74,14 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
             opcode.AddToArray(res, 0);
             Array.Copy(this.data, 0, res, 2, this.data.Length);
             return res;
+        }
+
+        public ushort Length
+        {
+            get
+            {
+                return (ushort)(2 + this.data.Length);
+            }
         }
 
         public XCMPOpCode OpCode

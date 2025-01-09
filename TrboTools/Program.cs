@@ -12,9 +12,9 @@ class Program
         app.Configure(config =>
         {
             config.SetApplicationName("trbotools");
-            config.AddCommand<Feature>("enable")
+            config.AddCommand<Enable>("enable")
                 .WithDescription("Enable a feature on a radio")
-                .WithExample(["enable", "NA_AESPRIVACY_SUB"]);
+                .WithExample(["enable", "NA_AESPRIVACY_SUB", "GLOBAL_SMA_Q4_2025_SUB"]);
         });
 
         return app.Run(args);

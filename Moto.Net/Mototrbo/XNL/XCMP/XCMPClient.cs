@@ -319,6 +319,7 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
                     case XCMPOpCode.XferDataReply:
                     case XCMPOpCode.SuperBundleReply:
                     case XCMPOpCode.CodeplugAttrReply:
+                    case XCMPOpCode.SecureConnectReply:
                     case XCMPOpCode.ReadIshItemReply:
                         //These packets I know about and have logic to handle...
                         if(((XCMPReplyPacket)xcmp).ErrorCode == XCMPErrorCode.IncorrectMode)

@@ -31,6 +31,8 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
         SuperBundleReply = 0x802E,
         CodeplugAttrRequest = 0x0037,
         CodeplugAttrReply = 0x8037,
+        SecureConnectRequest = 0x003D,
+        SecureConnectReply = 0x803D,
         ReadIshItemRequest = 0x0100,
         ReadIshItemReply = 0x8100,
         ISHUnlockReportRequest = 0x0108,

@@ -303,6 +303,13 @@ namespace Moto.Net
             return reply != null ? reply.SecurityCapability : 0;
         }
 
+        public SecureConnectReply QuerySecureIPandPort()
+        {
+            var req = new SecureConnectRequest(FunctionOperation.ReadIpAndPort);
+            var reply = SendXCMP<SecureConnectReply>(req);
+            return reply;
+        }
+
         public T SendXCMP<T>(XCMPPacket pkt) where T : XCMPReplyPacket
         {
             if (xcmpClient != null)

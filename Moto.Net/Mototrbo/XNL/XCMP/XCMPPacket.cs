@@ -51,6 +51,8 @@ namespace Moto.Net.Mototrbo.XNL.XCMP
                     return new SuperBundleReply(data);
                 case XCMPOpCode.CodeplugAttrReply:
                     return new CodeplugAttributeReply(data);
+                case XCMPOpCode.SecureConnectReply:
+                    return new SecureConnectReply(data);
                 case XCMPOpCode.ReadIshItemReply:
                     return new ReadIshItemReply(data);
                 case XCMPOpCode.RadioKeyReply:

@@ -42,6 +42,13 @@ internal sealed class Enable : Command<EnableSettings>
       return 2;
     }
 
+    var security = radio.QuerySecurityCapability();
+    Console.WriteLine("Security: {0}", security);
+    if (security == 2)
+    {
+        // Get secure IP and Port   
+    }
+
     var data = radio.Device.ValidationData();
 
     var hash = new byte[128];

@@ -296,6 +296,13 @@ namespace Moto.Net
             return reply != null && reply.ErrorCode == XCMPErrorCode.Success;
         }
 
+        public int QuerySecurityCapability()
+        {
+            var req = new CodeplugAttributeRequest(CodeplugAttributeOperation.Read, CodeplugAttributeType.CertificateSupportedID);
+            var reply = SendXCMP<CodeplugAttributeReply>(req);
+            return reply != null ? reply.SecurityCapability : 0;
+        }
+
         public T SendXCMP<T>(XCMPPacket pkt) where T : XCMPReplyPacket
         {
             if (xcmpClient != null)

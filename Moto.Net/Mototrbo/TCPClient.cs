@@ -1,28 +1,32 @@
 ﻿using Moto.Net.Mototrbo.XNL;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using NippyWard.OpenSSL.Keys;
+using NippyWard.OpenSSL.SSL;
+using NippyWard.OpenSSL.X509;
+using System.IO;
+using System.Configuration;
+using System.Collections.Generic;
 
 namespace Moto.Net.Mototrbo
 {
     public class TCPClient : IDisposable
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        protected System.Net.Sockets.TcpClient rawClient;
+        protected TcpClient rawClient;
         protected IPEndPoint ep;
         protected bool running;
         protected bool ignoreUnknown;
+        protected bool isSecure = false;
         protected Thread thread;
         protected NetworkStream stream;
         protected BlockingCollection<Packet> output;
         private byte[] buffer = new byte[1024];
+        private SslState sslState;
+        private Ssl ssl;
 
         public event PacketHandler GotXNLXCMPPacket;
 
@@ -34,50 +38,131 @@ namespace Moto.Net.Mototrbo
         {
             this.ep = ep;
             this.ignoreUnknown = ignoreUnknown;
-            this.rawClient = new System.Net.Sockets.TcpClient();
-            this.rawClient.Connect(ep);
-            this.stream = this.rawClient.GetStream();
-            this.output = new BlockingCollection<Packet>();
-            this.running = true;
-            this.stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(this.GotData), null);
+            rawClient = new TcpClient();
+            rawClient.Connect(ep);
+            stream = rawClient.GetStream();
+            output = new BlockingCollection<Packet>();
+            running = true;
+            stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(GotData), null);
+        }
+
+        public void SecureUpgrade(IPEndPoint ep)
+        {
+            // Close the old stream and client
+            stream.Flush();
+            stream.Close();
+            rawClient.Close();
+
+            // Create a new TcpClient and NetworkStream for secure connection
+            this.ep = ep;
+            rawClient = new TcpClient();
+            rawClient.Connect(ep);
+            stream = rawClient.GetStream();
+            stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(GotData), null);
+            isSecure = true;
+
+            // Set up SSL
+            var options = new SslOptions();
+            options.Ciphers = ["PSK-AES128-CBC-SHA", "PSK-AES256-CBC-SHA", "AES256-SHA256"];
+            options.SslProtocol = SslProtocol.Tls12;
+            options.SslStrength = SslStrength.Level0;
+            options.ClientCertificateCallbackHandler = new ClientCertificateCallbackHandler(clientCertificateCallbackHandler);
+            ssl = Ssl.CreateClientSsl(options);
+
+            // Do the SSL handshake
+            DoSslHandshake();
         }
 
         private void GotData(IAsyncResult result)
         {
             try
             {
-                int count = this.stream.EndRead(result);
+                int count = stream.EndRead(result);
                 if (count > 0)
                 {
                     byte[] tmpBuffer = new byte[count];
-                    Buffer.BlockCopy(this.buffer, 0, tmpBuffer, 0, count);
-                    XNLPacket p = XNLPacket.Decode(tmpBuffer);
-                    log.DebugFormat("Recieved {0}", p);
-                    XNLXCMPPacket pkt = new XNLXCMPPacket(new RadioID(0), p);
-                    PacketEventArgs e = new PacketEventArgs(pkt, this.ep);
-                    if (this.GotXNLXCMPPacket != null)
+                    Buffer.BlockCopy(buffer, 0, tmpBuffer, 0, count);
+                    if (isSecure)
                     {
-                        this.GotXNLXCMPPacket(this, e);
+                        GotTLSData(tmpBuffer);
                     }
-                    else if (!ignoreUnknown)
+                    else
                     {
-                        log.ErrorFormat("Got an unknown packet {0}", p);
-                        output.Add(pkt);
-                        this.thread = new Thread(this.SendOld);
-                        this.thread.Start();
+                        ProcessPacket(tmpBuffer);
                     }
                 }
-                this.stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(this.GotData), null);
+                stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(GotData), null);
             }
-            catch(ObjectDisposedException)
+            catch (ObjectDisposedException)
             {
                 //TCPClient is being disposed, this is fine, just ignore this exception
             }
         }
 
+        private void ProcessPacket(byte[] buffer)
+        {
+            XNLPacket p = XNLPacket.Decode(buffer);
+            XNLXCMPPacket pkt = new XNLXCMPPacket(new RadioID(0), p);
+            log.DebugFormat("Received {0}", pkt);
+            PacketEventArgs e = new PacketEventArgs(pkt, ep);
+            if (GotXNLXCMPPacket != null)
+            {
+                GotXNLXCMPPacket(this, e);
+            }
+            else if (!ignoreUnknown)
+            {
+                log.ErrorFormat("Got an unknown packet {0}", p);
+                output.Add(pkt);
+                thread = new Thread(SendOld);
+                thread.Start();
+            }
+        }
+
+        private void GotTLSData(byte[] buffer)
+        {
+            byte[] writeBuffer = new byte[16383];
+            sslState = ssl.ReadSsl(buffer, writeBuffer, out int readCount, out int writeCount);
+            if (writeCount > 0)
+            {
+                ProcessPacket(writeBuffer.AsSpan(0, writeCount).ToArray());
+            }
+        }
+
+        private void WriteSslCycle()
+        {
+            byte[] writeBuffer = new byte[16384];
+            while (sslState.WantsWrite())
+            {
+                sslState = ssl.WriteSsl(ReadOnlySpan<byte>.Empty, writeBuffer, out int readCount, out int writeCount);
+                if (writeCount > 0)
+                {
+                    stream.Write(writeBuffer, 0, writeCount);
+                }
+            }
+        }
+
+        private void WaitForRead()
+        {
+            while (sslState.WantsRead())
+            {
+                Thread.Sleep(10);
+            }
+        }
+
+        private void DoSslHandshake()
+        {
+            while (!ssl.DoHandshake(out sslState))
+            {
+                if (sslState.WantsWrite())
+                {
+                    WriteSslCycle();
+                }
+            }
+        }
+
         public void SendOld()
         {
-            while (this.GotXNLXCMPPacket == null)
+            while (GotXNLXCMPPacket == null)
             {
                 //Wait for an event listener to register...
                 Thread.Sleep(100);
@@ -85,23 +170,54 @@ namespace Moto.Net.Mototrbo
             while (output.Count > 0)
             {
                 Packet p = output.Take();
-                PacketEventArgs e = new PacketEventArgs(p, this.ep);
-                this.GotXNLXCMPPacket(this, e);
+                PacketEventArgs e = new PacketEventArgs(p, ep);
+                GotXNLXCMPPacket(this, e);
             }
         }
 
         public bool Send(XNLPacket packet)
         {
             byte[] bytes;
-            log.DebugFormat("Sending packet {0} to {1}", packet, this.ep);
+            log.DebugFormat("Sending packet {0} to {1}", packet, ep);
             bytes = packet.Encode();
-            this.stream.Write(bytes, 0, bytes.Length);
+            if (isSecure)
+            {
+                byte[] writeBuffer = new byte[16384];
+                sslState = ssl.WriteSsl(bytes, writeBuffer, out int readCount, out int writeCount);
+                if (writeCount > 0)
+                {
+                    stream.Write(writeBuffer, 0, writeCount);
+                }
+            }
+            else
+            {
+                stream.Write(bytes, 0, bytes.Length);
+            }
             return true;
         }
 
         public bool RawSend(byte[] bytes)
         {
-            this.stream.Write(bytes, 0, bytes.Length);
+            stream.Write(bytes, 0, bytes.Length);
+            return true;
+        }
+
+        private bool clientCertificateCallbackHandler(IReadOnlyCollection<X509Name> validCA, out X509Certificate clientCertificate, out PrivateKey clientPrivateKey)
+        {
+            var cpsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Motorola", "MOTOTRBO CPS 2.0");
+            var certPath = Path.Combine(cpsPath, "Metadata", "PCR", "resources", "msi_pcr.crt");
+            if (!File.Exists(certPath))
+            {
+                certPath = Path.Combine("msi_pcr.crt");
+            }
+            var keyPath = Path.Combine(cpsPath, "Metadata", "PCR", "resources", "msi_pcr.pem");
+            if (!File.Exists(keyPath))
+            {
+                keyPath = Path.Combine("msi_pcr.pem");
+            }
+            string password = ConfigurationManager.AppSettings.Get("keyPassword");
+            clientCertificate = X509Certificate.Read(certPath, null);
+            clientPrivateKey = PrivateKey.Read(keyPath, password);
             return true;
         }
 
@@ -112,14 +228,14 @@ namespace Moto.Net.Mototrbo
         {
             if (!disposedValue)
             {
-                if (this.thread != null)
+                if (thread != null)
                 {
-                    this.thread.Abort();
+                    thread.Abort();
                 }
                 if (disposing)
                 {
-                    this.rawClient.Close();
-                    this.output.Dispose();
+                    rawClient.Close();
+                    output.Dispose();
                 }
 
                 disposedValue = true;

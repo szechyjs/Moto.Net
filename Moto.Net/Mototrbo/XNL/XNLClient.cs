@@ -108,7 +108,7 @@ namespace Moto.Net.Mototrbo.XNL
                     this.ProcessSysMap((DevSysMapBroadcastPacket)xnl);
                     break;
                 case OpCode.MasterStatusBroadcast:
-                    log.Debug("Got master status broadcast...");
+                    log.DebugFormat("Got master status broadcast: {0}", xnl.Source);
                     this.masterID = xnl.Source;
                     break;
                 case OpCode.DeviceAuthKeyReply:
@@ -117,6 +117,7 @@ namespace Moto.Net.Mototrbo.XNL
                 case OpCode.DeviceConnectionReply:
                     DevConnectionReplyPacket rp = (DevConnectionReplyPacket)xnl;
                     this.xnlID = rp.AssignedID;
+                    log.DebugFormat("XNL ID assigned: {0}", this.xnlID);
                     break;
                 case OpCode.DataMessage:
                     if(this.GotDataPacket != null && (xnl.Destination.Int == 0 || xnl.Destination.Equals(this.xnlID)))
@@ -173,6 +174,7 @@ namespace Moto.Net.Mototrbo.XNL
 
         public bool ReInit()
         {
+            this.masterID = null;
             return this.initSuccess = this.Init();
         }
 
@@ -240,11 +242,11 @@ namespace Moto.Net.Mototrbo.XNL
             r.SendPacket(pkt);
         }
 
-        public void SendPacket(XNLPacket xnl, bool overridSrcAndDest)
+        public void SendPacket(XNLPacket xnl, bool overrideSrcAndDest)
         {
             if (xnl.OpCode == OpCode.DataMessage)
             {
-                if (overridSrcAndDest == true)
+                if (overrideSrcAndDest == true)
                 {
                     xnl.Source = this.xnlID;
                     xnl.Destination = this.masterID;

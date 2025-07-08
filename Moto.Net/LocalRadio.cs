@@ -7,7 +7,7 @@ namespace Moto.Net
 {
     public class LocalRadio : Radio
     {
-        protected readonly IPEndPoint ep;
+        protected internal IPEndPoint ep;
         protected internal TCPClient client;
 
         public LocalRadio(RadioSystem sys, IPAddress ip)
@@ -19,16 +19,21 @@ namespace Moto.Net
 
         public override bool InitXNL()
         {
-            this.client.GotXNLXCMPPacket += new PacketHandler(this.HandleXNLPacket);
-            this.xnlClient = new XNLClient(this, this.sys.ID);
-            if (this.xnlClient.InitSuccess == false)
+            this.client.GotXNLXCMPPacket += new PacketHandler(HandleXNLPacket);
+            this.xnlClient = new XNLClient(this, sys.ID);
+            if (xnlClient.InitSuccess == false)
             {
                 return false;
             }
-            this.xcmpClient = new Mototrbo.XNL.XCMP.XCMPClient(this.xnlClient);
-            Mototrbo.XNL.XCMP.RadioStatusReply reply = this.xcmpClient.GetRadioStatus(Mototrbo.XNL.XCMP.XCMPStatus.RadioID);
-            this.id = new RadioID(reply.Data);
+            SetRadioID();
             return true;
+        }
+
+        private void SetRadioID()
+        {
+            xcmpClient = new Mototrbo.XNL.XCMP.XCMPClient(xnlClient);
+            Mototrbo.XNL.XCMP.RadioStatusReply reply = xcmpClient.GetRadioStatus(Mototrbo.XNL.XCMP.XCMPStatus.RadioID);
+            this.id = new RadioID(reply.Data);
         }
 
         public override void SendPacket(Packet pkt)
@@ -44,15 +49,23 @@ namespace Moto.Net
         private void HandleXNLPacket(object sender, PacketEventArgs e)
         {
             //Is the XNL Packet from the correct radio?
-            if (this.ep.Equals(ep))
+            if (this.ep.Equals(e.EP))
             {
-                this.FireXNLPacket(e.Packet, e.EP);
+                FireXNLPacket(e.Packet, e.EP);
             }
         }
 
+        public void SecureUpgrade()
+        {
+            var ipPort = QuerySecureIPandPort();
+            ep = new IPEndPoint(ipPort.RadioIP, ipPort.RadioPort);
+            client.SecureUpgrade(ep);
+            xnlClient.ReInit();
+            SetRadioID();
+        }
         protected override void Dispose(bool disposing)
         {
-            if (this.isDisposed)
+            if (isDisposed)
             {
                 return;
             }

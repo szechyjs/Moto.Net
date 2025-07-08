@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NippyWard.OpenSSL" Version="1.2.0-alpha3" />
     <PackageReference Include="PacketDotNet" Version="1.4.7" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />

@@ -1,9 +1,4 @@
 using System.ComponentModel;
-using System.Configuration;
-using System.Net.Security;
-using System.Net.Sockets;
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
 using Moto.Net;
 using Moto.Net.Mototrbo.FXP;
 using Spectre.Console;
@@ -51,33 +46,7 @@ internal sealed class Enable : Command<EnableSettings>
     var security = radio.QuerySecurityCapability();
     if (security == 2)
     {
-        // Get secure IP and Port
-        var ipPort = radio.QuerySecureIPandPort();
-
-        // Establish TLS connection
-        TcpClient tlsClient = new TcpClient(ipPort.RadioIP.ToString(), ipPort.RadioPort);
-        SslStream tlsStream = new SslStream(tlsClient.GetStream(), false, CertCheck, UserCert, EncryptionPolicy.RequireEncryption);
-
-        // Get client certificate
-        var cpsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Motorola", "MOTOTRBO CPS 2.0");
-        var certPath = Path.Combine(cpsPath, "Metadata", "PCR", "resources", "msi_pcr.pfx");
-        string password = ConfigurationManager.AppSettings.Get("pfxPassword");
-        var cert = new X509Certificate2(certPath, password);
-        var certs = new X509Certificate2Collection(cert);
-
-        try
-        {
-            tlsStream.AuthenticateAsClient("", certs, SslProtocols.Tls12, false);
-        } catch (AuthenticationException e)
-        {
-            AnsiConsole.WriteException(e);
-            if (e.InnerException != null)
-            {
-                AnsiConsole.WriteException(e.InnerException);
-            }
-            tlsClient.Close();
-            return 3;
-        }
+      radio.SecureUpgrade();
     }
 
     var data = radio.Device.ValidationData();
@@ -108,19 +77,4 @@ internal sealed class Enable : Command<EnableSettings>
 
     return 0;
   }
-
-  bool CertCheck(Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-  {
-        //if (sslPolicyErrors == SslPolicyErrors.None) { return true; }
-        //if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors) { return true; } //we don't have a proper certificate tree
-        return true;
-    }
-
-    X509Certificate UserCert(object sender, string targetHost, X509CertificateCollection localCertificates, X509Certificate? remoteCertificate, string[] acceptableIssuers)
-    {
-        if (localCertificates != null && localCertificates.Count > 0)
-            return localCertificates[0];
-
-        return null;
-    }
 }

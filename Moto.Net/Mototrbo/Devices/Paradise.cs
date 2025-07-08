@@ -6,7 +6,12 @@ namespace Moto.Net.Mototrbo.Devices;
 
 public class Paradise : Device
 {
-  public Paradise(Radio radio) : base(radio) {}
+  private ProductFamily family;
+
+  public Paradise(Radio radio, ProductFamily family) : base(radio)
+  {
+    this.family = family;
+  }
 
   public override byte[] ValidationData()
   {
@@ -31,10 +36,10 @@ public class Paradise : Device
     if (reply.ErrorCode != XCMPErrorCode.Success)
       return null;
 
-    var radioSecInfo = new RadioSecInfo(ProductFamily.ParadiseRadio, ((ReadIshItemReply)reply[0]).IshData);
-    var featDesc = new FeatDescr(ProductFamily.ParadiseRadio, ((ReadIshItemReply)reply[1]).IshData);
-    var radioAppInfo = new RadioAppInfo(ProductFamily.ParadiseRadio, ((ReadIshItemReply)reply[2]).IshData);
-    var netSet = new NetSet(ProductFamily.ParadiseRadio, ((ReadIshItemReply)reply[3]).IshData);
+    var radioSecInfo = new RadioSecInfo(family, ((ReadIshItemReply)reply[0]).IshData);
+    var featDesc = new FeatDescr(family, ((ReadIshItemReply)reply[1]).IshData);
+    var radioAppInfo = new RadioAppInfo(family, ((ReadIshItemReply)reply[2]).IshData);
+    var netSet = new NetSet(family, ((ReadIshItemReply)reply[3]).IshData);
 
     var validationData = Bytes.ConcatArrays(
       radioSecInfo.RS_SERIALNUM,

@@ -23,7 +23,7 @@ public class FeatDescr
         family == ProductFamily.DenaliRadio ||
         family == ProductFamily.PhoenixRadio)
         return data.Skip(28).Take(16).ToArray();
-      else
+      else // Paradise Repeater
         return data.Skip(28).Take(14).ToArray();
     }
   }

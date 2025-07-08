@@ -17,7 +17,16 @@ public class RadioSecInfo
   }
 
   public byte[] RS_SERIALNUM => data.Take(10).ToArray();
-  public byte[] RS_PROCID => [data[99], data[98], data[97], data[96], data[103], data[102], data[101], data[100]];
+  public byte[] RS_PROCID
+  {
+    get
+    {
+      if (family == ProductFamily.ParadiseRepeaterRadio)
+        return data.Skip(96).Take(8).Reverse().ToArray();
+      else
+        return [data[99], data[98], data[97], data[96], data[103], data[102], data[101], data[100]];
+    }
+  }
   public byte[] RS_MODELNUM => data.Skip(12).Take(12).ToArray();
   public byte RS_ORGPROGDAY => data[32];
   public byte RS_ORGPROGMONTH => data[31];

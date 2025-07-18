@@ -17,14 +17,19 @@ public class FeatDescr
   }
 
   public byte[] FD_FLASHID {
-    get {
+    get
+    {
       if (family == ProductFamily.ParadiseRadio ||
         family == ProductFamily.ParadiseLightRadio ||
         family == ProductFamily.DenaliRadio ||
         family == ProductFamily.PhoenixRadio)
         return data.Skip(28).Take(16).ToArray();
-      else // Paradise Repeater
+      else if (family == ProductFamily.ParadiseRepeaterRadio ||
+        family == ProductFamily.MatrixRadio ||
+        family == ProductFamily.MatrixRepeaterRadio)
         return data.Skip(28).Take(14).ToArray();
+      else
+        throw new System.Exception("Unsupported family for FD_FLASHID: " + family);
     }
   }
 }

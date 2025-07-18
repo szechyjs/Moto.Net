@@ -17,7 +17,28 @@ public class NetSet
     this.family = family;
   }
 
-  public byte[] NETSET_RDIPADDR => data.Skip(8).Take(4).Reverse().ToArray();
-  public byte[] NETSET_RDSUBMASK => data.Skip(4).Take(4).Reverse().ToArray();
+  public byte[] NETSET_RDIPADDR
+  {
+    get
+    {
+      if (family == ProductFamily.MatrixRadio ||
+          family == ProductFamily.MatrixRepeaterRadio)
+        return data.Skip(4).Take(4).ToArray();
+      else
+        return data.Skip(8).Take(4).Reverse().ToArray();
+    }
+  }
+
+  public byte[] NETSET_RDSUBMASK
+  {
+    get
+    {
+      if (family == ProductFamily.MatrixRadio ||
+        family == ProductFamily.MatrixRepeaterRadio)
+        return data.Skip(4).Take(3).ToArray();
+      else
+        return data.Skip(4).Take(4).Reverse().ToArray();
+    }
+  }
   public byte NETSET_CAINETID => data[0];
 }

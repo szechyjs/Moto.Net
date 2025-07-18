@@ -23,6 +23,9 @@ public class RadioSecInfo
     {
       if (family == ProductFamily.ParadiseRepeaterRadio)
         return data.Skip(96).Take(8).Reverse().ToArray();
+      else if (family == ProductFamily.MatrixRadio ||
+        family == ProductFamily.MatrixRepeaterRadio)
+        return data.Skip(96).Take(8).ToArray();
       else
         return [data[99], data[98], data[97], data[96], data[103], data[102], data[101], data[100]];
     }

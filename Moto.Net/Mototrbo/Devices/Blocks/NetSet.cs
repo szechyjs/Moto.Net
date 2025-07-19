@@ -23,7 +23,7 @@ public class NetSet
     {
       if (family == ProductFamily.MatrixRadio ||
           family == ProductFamily.MatrixRepeaterRadio)
-        return data.Skip(4).Take(4).ToArray();
+        return data.Skip(8).Take(4).ToArray();
       else
         return data.Skip(8).Take(4).Reverse().ToArray();
     }
@@ -35,7 +35,7 @@ public class NetSet
     {
       if (family == ProductFamily.MatrixRadio ||
         family == ProductFamily.MatrixRepeaterRadio)
-        return data.Skip(4).Take(3).ToArray();
+        return data.Skip(4).Take(4).ToArray();
       else
         return data.Skip(4).Take(4).Reverse().ToArray();
     }
